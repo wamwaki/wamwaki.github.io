@@ -1,0 +1,327 @@
+/* Base styles */: root {
+    --color - success: #10B981;
+
+
+
+    --color-warning: # F59E0B;
+    --color - danger: #EF4444;
+    --color - primary: #3B82F6;
+
+
+
+    --transition-speed: 300ms;
+
+
+
+}
+
+
+
+
+
+
+
+body {
+
+
+
+    min-height: 100vh;
+
+
+
+    background-color: # F3F4F6;
+}
+
+/* Card and Container Styles */
+.parking - slot {
+    transition: all
+    var (--transition - speed) ease - in -out;
+    position: relative;
+    overflow: hidden;
+}
+
+.parking - slot.available {
+    background - color: var (--color - success);
+    color: white;
+}
+
+.parking - slot.occupied {
+    background - color: var (--color - danger);
+    color: white;
+}
+
+.parking - slot.checking {
+    background - color: var (--color - warning);
+    color: white;
+}
+
+/* Status Indicators */
+.status - indicator {
+    width: 10 px;
+    height: 10 px;
+    border - radius: 50 % ;
+    display: inline - block;
+    margin - right: 0.5 rem;
+}
+
+.status - indicator.online {
+    background - color: var (--color - success);
+    box - shadow: 0 0 0 rgba(16, 185, 129, 0.4);
+    animation: pulse 2 s infinite;
+}
+
+.status - indicator.offline {
+    background - color: var (--color - danger);
+}
+
+/* Alert Styles */
+.alert - container {
+    transition: all
+    var (--transition - speed) ease - in -out;
+}
+
+.double - parking - alert {
+    border - left: 4 px solid
+    var (--color - danger);
+    animation: slideIn
+    var (--transition - speed) ease - in -out;
+}
+
+/* Event Log Styles */
+.event - log {
+    max - height: 400 px;
+    overflow - y: auto;
+}
+
+.event - row {
+    transition: background - color
+    var (--transition - speed) ease - in -out;
+}
+
+.event - row: hover {
+    background - color: #F9FAFB;
+}
+
+/* Statistics Cards */
+.stat - card {
+    transition: transform
+    var (--transition - speed) ease - in -out;
+}
+
+.stat - card: hover {
+    transform: translateY(-2 px);
+}
+
+.stat - value {
+    font - size: 2 rem;
+    font - weight: bold;
+    line - height: 1;
+}
+
+/* Connection Status */
+#
+connectionStatus {
+    transition: all
+    var (--transition - speed) ease - in -out;
+    opacity: 0.9;
+}
+
+#
+connectionStatus: hover {
+    opacity: 1;
+}
+
+#
+statusDot {
+    transition: background - color
+    var (--transition - speed) ease - in -out;
+}
+
+/* Loading States */
+.loading - indicator {
+    position: relative;
+}
+
+.loading - indicator::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear - gradient(
+        90 deg,
+        rgba(255, 255, 255, 0) 0 % ,
+        rgba(255, 255, 255, 0.2) 50 % ,
+        rgba(255, 255, 255, 0) 100 %
+    );
+    animation: loading 1.5 s infinite;
+}
+
+/* Animations */
+@keyframes pulse {
+    0 % {
+        box - shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+    }
+    70 % {
+        box - shadow: 0 0 0 10 px rgba(16, 185, 129, 0);
+    }
+    100 % {
+        box - shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100 % );
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes loading {
+    from {
+        transform: translateX(-100 % );
+    }
+    to {
+        transform: translateX(100 % );
+    }
+}
+
+/* Responsive Adjustments */
+@media(max - width: 768 px) {
+    .stat - card {
+        margin - bottom: 1 rem;
+    }
+
+    .parking - slot {
+        margin - bottom: 1 rem;
+    }
+
+    .event - log {
+        max - height: 300 px;
+    }
+}
+
+/* Table Styles */
+.events - table {
+    width: 100 % ;
+    border - collapse: separate;
+    border - spacing: 0;
+}
+
+.events - table th {
+    background - color: #F9FAFB;
+    padding: 0.75 rem 1 rem;
+    text - align: left;
+    font - weight: 600;
+    color: #374151;
+
+
+
+    border-bottom: 2px solid # E5E7EB;
+}
+
+.events - table td {
+    padding: 0.75 rem 1 rem;
+    border - bottom: 1 px solid# E5E7EB;
+}
+
+/* Custom Scrollbar */
+.custom - scrollbar {
+    scrollbar - width: thin;
+    scrollbar - color: #CBD5E1 transparent;
+}
+
+.custom - scrollbar::-webkit - scrollbar {
+    width: 6 px;
+}
+
+.custom - scrollbar::-webkit - scrollbar - track {
+    background: transparent;
+}
+
+.custom - scrollbar::-webkit - scrollbar - thumb {
+    background - color: #CBD5E1;
+    border - radius: 3 px;
+}
+
+/* Toast Notifications */
+.toast - notification {
+    position: fixed;
+    bottom: 1 rem;
+    right: 1 rem;
+    padding: 1 rem;
+    border - radius: 0.5 rem;
+    background - color: white;
+    box - shadow: 0 4 px 6 px - 1 px rgba(0, 0, 0, 0.1),
+    0 2 px 4 px - 1 px rgba(0, 0, 0, 0.06);
+    z - index: 50;
+    animation: slideUp
+    var (--transition - speed) ease - in -out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100 % );
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Double Parking Warning */
+.double - parking - warning {
+    background - color: rgba(239, 68, 68, 0.1);
+    border: 1 px solid
+    var (--color - danger);
+    padding: 1 rem;
+    border - radius: 0.5 rem;
+    margin: 1 rem 0;
+    animation: pulse - warning 2 s infinite;
+}
+
+@keyframes pulse - warning {
+    0 % {
+        box - shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+    }
+    70 % {
+        box - shadow: 0 0 0 10 px rgba(239, 68, 68, 0);
+    }
+    100 % {
+        box - shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
+}
+
+/* Grid Layout Improvements */
+.grid - container {
+    display: grid;
+    gap: 1.5 rem;
+    grid - template - columns: repeat(auto - fit, minmax(250 px, 1 fr));
+}
+
+/* Utility Classes */
+.fade - enter {
+    opacity: 0;
+}
+
+.fade - enter - active {
+    opacity: 1;
+    transition: opacity
+    var (--transition - speed) ease - in -out;
+}
+
+.fade - exit {
+    opacity: 1;
+}
+
+.fade - exit - active {
+    opacity: 0;
+    transition: opacity
+    var (--transition - speed) ease - in -out;
+}

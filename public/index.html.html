@@ -1,0 +1,451 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Parking System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="css/styles.css" rel="stylesheet">
+    <!-- Include the updated CSS here -->
+    <style>
+         :root {
+            --primary-color: #4A90E2;
+            /* Cool Blue */
+            --secondary-color: #50E3C2;
+            /* Mint Green */
+            --success-color: #4CAF50;
+            /* Green */
+            --danger-color: #F44336;
+            /* Red */
+            --background-color-light: #f8f8f8;
+            /* Light Grey */
+            --background-color-dark: #2c3e50;
+            /* Dark Blue */
+            --text-color-light: #333333;
+            /* Dark text for light mode */
+            --text-color-dark: #e0e0e0;
+            /* Light text for dark mode */
+            --border-color-light: #dddddd;
+            /* Light border */
+            --border-color-dark: #444444;
+            /* Dark border */
+        }
+        
+        body {
+            background: var(--background-color-light);
+            color: var(--text-color-light);
+            font-family: 'Roboto', sans-serif;
+            transition: background 0.3s, color 0.3s;
+        }
+        
+        body.dark-mode {
+            background: var(--background-color-dark);
+            color: var(--text-color-dark);
+        }
+        
+        h1,
+        h2,
+        h3 {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+        }
+        
+        .dark-mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .dark-mode-toggle:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        body.dark-mode .dark-mode-toggle {
+            background-color: var(--primary-color);
+        }
+        
+        body.dark-mode .dark-mode-toggle:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .booking-button,
+        .confirm-button {
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .booking-button:hover,
+        .confirm-button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .parking-slot {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 3px solid transparent;
+            /* Default transparent border */
+            background-color: var(--background-color-light);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            /* Add subtle shadow */
+            position: relative;
+        }
+        
+        body.dark-mode .parking-slot {
+            background-color: var(--background-color-dark);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            /* Add subtle shadow */
+        }
+        
+        .parking-slot.available::before,
+        .parking-slot.occupied::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 10px;
+        }
+        
+        .parking-slot.available::before {
+            background-color: var(--success-color);
+            /* Green indicator for available slots */
+        }
+        
+        .parking-slot.occupied::before {
+            background-color: var(--danger-color);
+            /* Red indicator for occupied slots */
+        }
+        
+        .parking-slot:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .container {
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            gap: 20px;
+        }
+        
+        @media (min-width: 768px) {
+            .grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+        
+        .booking-details {
+            color: var(--text-color-light);
+        }
+        
+        body.dark-mode .booking-details {
+            color: var(--text-color-dark);
+        }
+        
+        .dropdown-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .dropdown-table th,
+        .dropdown-table td {
+            border: 1px solid var(--border-color-light);
+            padding: 8px;
+            text-align: left;
+        }
+        
+        body.dark-mode .dropdown-table th,
+        body.dark-mode .dropdown-table td {
+            border-color: var(--border-color-dark);
+        }
+        
+        .dropdown-table th {
+            background-color: var(--background-color-light);
+        }
+        
+        body.dark-mode .dropdown-table th {
+            background-color: var(--background-color-dark);
+        }
+        
+        .dropdown-menu {
+            background-color: var(--background-color-light);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        body.dark-mode .dropdown-menu {
+            background-color: var(--background-color-dark);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+        
+        .status {
+            color: var(--text-color-light);
+        }
+        
+        body.dark-mode .status {
+            color: var(--text-color-dark);
+        }
+        
+        .bg-white {
+            background-color: var(--background-color-light);
+        }
+        
+        body.dark-mode .bg-white {
+            background-color: var(--background-color-dark);
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .rounded-lg {
+            border-radius: 0.5rem;
+        }
+        
+        .shadow {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        body.dark-mode .shadow {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+        }
+        
+        .mb-8 {
+            margin-bottom: 2rem;
+        }
+        
+        .p-6 {
+            padding: 1.5rem;
+        }
+        
+        .px-4 {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        
+        .py-8 {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+        
+        input,
+        label {
+            font-size: 1rem;
+            /* Increase font size */
+            color: var(--text-color-light);
+            /* Ensure text color is visible */
+        }
+        
+        body.dark-mode input,
+        body.dark-mode label {
+            color: var(--text-color-dark);
+            /* Ensure text color is visible in dark mode */
+        }
+        
+        input {
+            background-color: var(--background-color-light);
+            border: 1px solid var(--border-color-light);
+            padding: 0.5rem;
+            width: 100%;
+            box-sizing: border-box;
+            border-radius: 0.25rem;
+        }
+        
+        body.dark-mode input {
+            background-color: var(--background-color-dark);
+            border: 1px solid var(--border-color-dark);
+        }
+        /* Media queries for responsiveness */
+        
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+                /* Single column layout for smaller screens */
+            }
+            .container {
+                padding: 10px;
+            }
+            .p-6 {
+                padding: 1rem;
+            }
+        }
+    </style>
+
+</head>
+
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <header class="mb-8 relative">
+            <h1 class="text-4xl font-bold text-center md:text-left">Smart Parking System</h1>
+            <p class="text-center mt-2 md:text-left">Real-time Parking Management Dashboard</p>
+            <button id="darkModeToggle" class="dark-mode-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </header>
+
+        <!-- System Status -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-2">Total Slots</h2>
+                <p class="text-4xl font-bold" id="totalSlots">-</p>
+                <p class="text-sm mt-2">Total capacity: 3 slots</p>
+            </div>
+        </div>
+
+        <!-- Parking Slots Status -->
+        <div class="bg-white rounded-lg shadow p-6 mb-8">
+            <h2 class="text-2xl font-semibold mb-6">Parking Slots Status</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="parkingSlots">
+                <!-- Slot 1 -->
+                <div class="slot-container" id="slot1Container">
+                    <div class="parking-slot p-6 rounded-lg text-center available">
+                        <h3 class="text-xl font-semibold mb-2">Slot 1</h3>
+                        <div id="slot1Status" class="text-lg font-medium"></div>
+                        <div id="slot1LastUpdate" class="text-sm text-gray-500 mt-2"></div>
+                        <button id="slot1BookButton" class="booking-button mt-2">Book Now</button>
+                        <form class="booking-form mt-4 hidden">
+                            <input type="hidden" class="slot-number" value="1">
+                            <label for="carNumberPlate1" class="block text-sm font-medium">Car Number Plate</label>
+                            <input type="text" id="carNumberPlate1" class="car-number-plate mt-1 block w-full" required>
+                            <label for="bookingStartTime1" class="block text-sm font-medium">Booking Start Time</label>
+                            <input type="text" id="bookingStartTime1" class="booking-start-time mt-1 block w-full booking-details flatpickr" required>
+                            <label for="bookingEndTime1" class="block text-sm font-medium">Booking End Time</label>
+                            <input type="text" id="bookingEndTime1" class="booking-end-time mt-1 block w/full booking-details flatpickr" required>
+                            <button type="submit" class="mt-2 confirm-button">Confirm Booking</button>
+                            <div class="relative mt-4">
+                                <button type="button" class="dropdown-button bg-gray-200 text-gray-700 px-4 py-2 rounded mt-2">View Booked Times</button>
+                                <div class="dropdown-menu hidden absolute bg-white border rounded-lg shadow-lg mt-1 right-0 w/full z-10 booking-details">
+                                    <table class="dropdown-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Car Number Plate</th>
+                                                <th>Start Time</th>
+                                                <th>End Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Booked times will be populated here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Slot 2 -->
+                <div class="slot-container" id="slot2Container">
+                    <div class="parking-slot p-6 rounded-lg text-center occupied">
+                        <h3 class="text-xl font-semibold mb-2">Slot 2</h3>
+                        <div id="slot2Status" class="text-lg font-medium"></div>
+                        <div id="slot2LastUpdate" class="text-sm text-gray-500 mt-2"></div>
+                        <button id="slot2BookButton" class="booking-button mt-2">Book Now</button>
+                        <form class="booking-form mt-4 hidden">
+                            <input type="hidden" class="slot-number" value="2">
+                            <label for="carNumberPlate2" class="block text-sm font-medium">Car Number Plate</label>
+                            <input type="text" id="carNumberPlate2" class="car-number-plate mt-1 block w/full" required>
+                            <label for="bookingStartTime2" class="block text-sm font-medium">Booking Start Time</label>
+                            <input type="text" id="bookingStartTime2" class="booking-start-time mt-1 block w/full booking-details flatpickr" required>
+                            <label for="bookingEndTime2" class="block text-sm font-medium">Booking End Time</label>
+                            <input type="text" id="bookingEndTime2" class="booking-end-time mt-1 block w/full booking-details flatpickr" required>
+                            <button type="submit" class="mt-2 confirm-button">Confirm Booking</button>
+                            <div class="relative mt-4">
+                                <button type="button" class="dropdown-button bg-gray-200 text-gray-700 px-4 py-2 rounded mt-2">View Booked Times</button>
+                                <div class="dropdown-menu hidden absolute bg-white border rounded-lg shadow-lg mt-1 right-0 w/full z-10 booking-details">
+                                    <table class="dropdown-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Car Number Plate</th>
+                                                <th>Start Time</th>
+                                                <th>End Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Booked times will be populated here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Slot 3 -->
+                <div class="slot-container" id="slot3Container">
+                    <div class="parking-slot p-6 rounded-lg text-center available">
+                        <h3 class="text-xl font-semibold mb-2">Slot 3</h3>
+                        <div id="slot3Status" class="text-lg font-medium"></div>
+                        <div id="slot3LastUpdate" class="text-sm text-gray-500 mt-2"></div>
+                        <button id="slot3BookButton" class="booking-button mt-2">Book Now</button>
+                        <form class="booking-form mt-4 hidden">
+                            <input type="hidden" class="slot-number" value="3">
+                            <label for="carNumberPlate3" class="block text-sm font-medium">Car Number Plate</label>
+                            <input type="text" id="carNumberPlate3" class="car-number-plate mt-1 block w/full" required>
+                            <label for="bookingStartTime3" class="block text-sm font-medium">Booking Start Time</label>
+                            <input type="text" id="bookingStartTime3" class="booking-start-time mt-1 block w/full booking-details flatpickr" required>
+                            <label for="bookingEndTime3" class="block text-sm font-medium">Booking End Time</label>
+                            <input type="text" id="bookingEndTime3" class="booking-end-time mt-1 block w/full booking-details flatpickr" required>
+                            <button type="submit" class="mt-2 confirm-button">Confirm Booking</button>
+                            <div class="relative mt-4">
+                                <button type="button" class="dropdown-button bg-gray-200 text-gray-700 px-4 py-2 rounded mt-2">View Booked Times</button>
+                                <div class="dropdown-menu hidden absolute bg-white border rounded-lg shadow-lg mt-1 right-0 w/full z-10 booking-details">
+                                    <table class="dropdown-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Car Number Plate</th>
+                                                <th>Start Time</th>
+                                                <th>End Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Booked times will be populated here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Connection Status -->
+        <div class="fixed bottom-4 right-4">
+            <div id="connectionStatus" class="bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg flex items-center">
+                <span id="statusDot" class="w-2 h-2 rounded-full mr-2 bg-gray-500"></span>
+                <span id="statusText">Connecting...</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+    <script>
+        // Initialize flatpickr for date and time inputs
+        flatpickr('.flatpickr', {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i"
+        });
+
+        const toggleButton = document.getElementById('darkModeToggle');
+        toggleButton.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+        });
+    </script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
